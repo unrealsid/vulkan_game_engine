@@ -134,6 +134,9 @@ void VulkanEngine::init_pipelines()
 	//use the triangle layout we created
 	pipelineBuilder._pipelineLayout = _quadPipelineLayout;
 
+	//default depthtesting
+	pipelineBuilder._depthStencil = vkinit::depth_stencil_create_info(true, true, VK_COMPARE_OP_LESS_OR_EQUAL);
+
 	//finally build the pipeline
 	_quadPipeline = pipelineBuilder.build_pipeline(_device, _renderPass);
 	create_material(_quadPipeline, _quadPipelineLayout, "quad");

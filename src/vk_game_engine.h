@@ -111,6 +111,12 @@ public:
 
 	VkDescriptorSetLayout _singleTextureSetLayout;
 
+	VkImageView _depthImageView;
+	AllocatedImage _depthImage;
+
+	//the format for the depth image
+	VkFormat _depthFormat;
+
 	std::vector<RenderObject> _renderables;
 
 	std::unordered_map<std::string, Material> _materials;
