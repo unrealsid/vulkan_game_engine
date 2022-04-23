@@ -37,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\stb_image.h" />
+    <ClInclude Include="src\tiny_obj_loader.h" />
     <ClInclude Include="src\VkBootstrap.h" />
     <ClInclude Include="src\VkBootstrapDispatch.h" />
     <ClInclude Include="src\vk_frame_data.h" />

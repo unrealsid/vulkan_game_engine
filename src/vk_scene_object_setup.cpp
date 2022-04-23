@@ -65,6 +65,14 @@ void VulkanEngine::init_scene()
 	quadObject.transformMatrix = glm::mat4{1.0f};
 
 	_renderables.push_back(quadObject);
+
+	RenderObject monkey;
+
+	monkey.material = get_material("quad");
+	monkey.mesh = get_mesh("monkey");
+	monkey.transformMatrix = glm::mat4{ 1.0f };
+
+	_renderables.push_back(monkey);
 }
 
 void VulkanEngine::draw_objects(VkCommandBuffer cmd, RenderObject* first, int count)

@@ -87,6 +87,8 @@ public:
 
 	Mesh _quadMesh;
 
+	Mesh _monkeyMesh;
+
 	AllocatedBuffer create_buffer(size_t allocSize, VkBufferUsageFlags usage, VmaMemoryUsage memoryUsage);
 
 	FrameData _frameData;

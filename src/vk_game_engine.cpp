@@ -10,6 +10,10 @@
 #include "vk_mem_alloc.h"
 #include "vk_global_data.h"
 
+#define TINYOBJLOADER_IMPLEMENTATION
+#include "tiny_obj_loader.h"
+
+
 void VulkanEngine::init()
 {
 	// We initialize SDL and create a window with it. 

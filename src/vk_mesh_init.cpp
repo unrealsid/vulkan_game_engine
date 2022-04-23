@@ -1,6 +1,8 @@
 #include "vk_game_engine.h"
 #include <iostream>
 #include "vk_initializers.h"
+#include "vk_mesh.h"
+#include "vk_shader_config.h"
 
 void VulkanEngine::load_meshes()
 {
@@ -37,6 +39,12 @@ void VulkanEngine::load_meshes()
 
 	//we don't care about the vertex normals
 	upload_mesh(_meshes["quad"]);
+
+	_monkeyMesh.load_from_obj(MODEL_LOCATION);
+
+	_meshes["monkey"] = _monkeyMesh;
+
+	upload_mesh(_meshes["monkey"]);
 }
 
 void VulkanEngine::upload_mesh(Mesh& mesh)
