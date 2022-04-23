@@ -12,7 +12,7 @@ void VulkanEngine::update_descriptors(VkCommandBuffer cmd)
 
 	//make a model view matrix for rendering the object
 	//camera view
-	glm::vec3 camPos = glm::vec3(0.0f, 0.0f, -1.0f);
+	glm::vec3 camPos = glm::vec3(0.0f, 0.0f, -10.0f);
 
 	// note that we're translating the scene in the reverse direction of where we want to move
 	glm::mat4 view = glm::translate(glm::mat4{1}, camPos);
@@ -20,7 +20,9 @@ void VulkanEngine::update_descriptors(VkCommandBuffer cmd)
 	//camera projection
 	float aspectRatio = static_cast<float>(_windowExtent.width) / static_cast<float>(_windowExtent.height);
 
-	glm::mat4 projection = glm::ortho(-aspectRatio, aspectRatio, -1.0f, 1.0f, -1.0f, 2.0f);
+	//glm::mat4 projection = glm::ortho(-aspectRatio, aspectRatio, -1.0f, 1.0f, -1.0f, 2.0f);
+	glm::mat4 projection = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f);
+
 	projection[1][1] *= -1;
 
 	_cameraData.view = view;
