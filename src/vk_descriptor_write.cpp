@@ -15,15 +15,13 @@ void VulkanEngine::update_descriptors(VkCommandBuffer cmd)
 	glm::vec3 camPos = glm::vec3(0.0f, 0.0f, -1.0f);
 
 	// note that we're translating the scene in the reverse direction of where we want to move
-	glm::mat4 view = glm::translate(glm::mat4{1.0f}, camPos);
+	glm::mat4 view = glm::translate(glm::mat4{1}, camPos);
 
 	//camera projection
 	float aspectRatio = static_cast<float>(_windowExtent.width) / static_cast<float>(_windowExtent.height);
 
-	glm::mat4 projection = glm::ortho(-aspectRatio, aspectRatio, -1.0f, 1.0f, -1.0f, 1.0f);
-
-	//camera projection
-	//glm::mat4 projection = glm::perspective(glm::radians(70.f), 1700.f / 900.f, 0.1f, 200.0f);
+	glm::mat4 projection = glm::ortho(-aspectRatio, aspectRatio, -1.0f, 1.0f, -1.0f, 2.0f);
+	projection[1][1] *= -1;
 
 	_cameraData.view = view;
 	_cameraData.projection = projection;

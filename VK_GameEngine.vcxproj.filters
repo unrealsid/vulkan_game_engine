@@ -108,4 +108,8 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\quad.frag" />
+    <None Include="shaders\quad.vert" />
+  </ItemGroup>
 </Project>

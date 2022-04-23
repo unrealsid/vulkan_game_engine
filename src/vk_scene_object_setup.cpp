@@ -87,7 +87,10 @@ void VulkanEngine::draw_objects(VkCommandBuffer cmd, RenderObject* first, int co
 
 	for (int i = 0; i < count; i++)
 	{
-		objectSSBO[i].modelMatrix = first[i].transformMatrix;
+		//model rotation
+		glm::mat4 model = glm::rotate(glm::mat4{ 1.0f }, glm::radians(_frameNumber * 0.4f), glm::vec3(0, 1, 0));
+
+		objectSSBO[i].modelMatrix = model;
 	}
 
 	vmaUnmapMemory(_allocator, _frameData.objectBuffer._allocation);

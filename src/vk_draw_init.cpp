@@ -101,6 +101,7 @@ void VulkanEngine::init_default_renderpass()
 	//array of 2 attachments, one for the color, and other for depth
 	VkAttachmentDescription attachments[2] = { color_attachment, depth_attachment };
 
+	//Adding dependencies to tell the engine at what stage to render and use the depth buffer
 	VkSubpassDependency dependency = {};
 	dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
 	dependency.dstSubpass = 0;

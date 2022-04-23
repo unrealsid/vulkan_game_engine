@@ -52,6 +52,10 @@
     <ClInclude Include="src\vk_textures.h" />
     <ClInclude Include="src\vk_types.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\quad.frag" />
+    <None Include="shaders\quad.vert" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
