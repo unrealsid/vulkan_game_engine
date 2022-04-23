@@ -145,10 +145,23 @@ void VulkanEngine::build_pipeline_layout()
 	//we are not using descriptor sets or other systems yet, so no need to use anything other than empty default
 	VkPipelineLayoutCreateInfo pipeline_layout_info = vkinit::pipeline_layout_create_info();
 
-	VkDescriptorSetLayout layouts[] = { _globalSetLayout, _objectSetLayout, _singleTextureSetLayout  };
+	if (_singleTextureSetLayout != nullptr)
+	{
+		VkDescriptorSetLayout layouts[] = { _globalSetLayout, _objectSetLayout, _singleTextureSetLayout };
 
-	pipeline_layout_info.setLayoutCount = 3;
-	pipeline_layout_info.pSetLayouts = layouts;
+		pipeline_layout_info.setLayoutCount = 3;
+		pipeline_layout_info.pSetLayouts = layouts;
 
-	VK_CHECK(vkCreatePipelineLayout(_device, &pipeline_layout_info, nullptr, &_quadPipelineLayout));
+		VK_CHECK(vkCreatePipelineLayout(_device, &pipeline_layout_info, nullptr, &_quadPipelineLayout));
+	}
+	else
+	{
+		VkDescriptorSetLayout layouts[] = { _globalSetLayout, _objectSetLayout };
+
+		pipeline_layout_info.setLayoutCount = 2;
+		pipeline_layout_info.pSetLayouts = layouts;
+
+		VK_CHECK(vkCreatePipelineLayout(_device, &pipeline_layout_info, nullptr, &_quadPipelineLayout));
+	}
+	
 }

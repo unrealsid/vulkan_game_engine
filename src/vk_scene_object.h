@@ -6,7 +6,10 @@
 
 struct Material 
 {
+	//Stages information
 	VkPipeline pipeline;
+
+	//Push constants and descriptor sets
 	VkPipelineLayout pipelineLayout;
 };
 

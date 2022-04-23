@@ -47,5 +47,5 @@ void VulkanEngine::update_descriptors(VkCommandBuffer cmd)
 	vmaUnmapMemory(_allocator, _frameData.globalFrameDataBuffer._allocation);
 
 	vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, _quadPipelineLayout, 0, 1, &_frameData.globalDescriptor, 0, nullptr);
-	vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, _quadPipelineLayout, 2, 1, &textureSet, 0, nullptr);
+	//vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, _quadPipelineLayout, 2, 1, &textureSet, 0, nullptr);
 }

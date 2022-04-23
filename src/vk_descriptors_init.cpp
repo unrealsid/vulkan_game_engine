@@ -94,6 +94,11 @@ void VulkanEngine::init_uniform_buffer_descriptors()
 
 void VulkanEngine::init_texture_descriptors()
 {
+	if (_loadedTexture.imageView == nullptr)
+	{
+		return;
+	}
+
 	//another set, one that holds a single texture
 	VkDescriptorSetLayoutBinding textureBind = vkinit::descriptorset_layout_binding(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 0);
 

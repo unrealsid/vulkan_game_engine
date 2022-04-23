@@ -113,8 +113,9 @@ bool vkutil::load_image_from_file(VulkanEngine& engine, const char* file, Alloca
 
 void VulkanEngine::load_images()
 {
-	vkutil::load_image_from_file(*this, TEXTURE_LOCATION, _loadedTexture.image);
-
-	VkImageViewCreateInfo imageinfo = vkinit::imageview_create_info(VK_FORMAT_R8G8B8A8_SRGB, _loadedTexture.image._image, VK_IMAGE_ASPECT_COLOR_BIT);
-	vkCreateImageView(_device, &imageinfo, nullptr, &_loadedTexture.imageView);
+	if (vkutil::load_image_from_file(*this, TEXTURE_LOCATION, _loadedTexture.image))
+	{
+		VkImageViewCreateInfo imageinfo = vkinit::imageview_create_info(VK_FORMAT_R8G8B8A8_SRGB, _loadedTexture.image._image, VK_IMAGE_ASPECT_COLOR_BIT);
+		vkCreateImageView(_device, &imageinfo, nullptr, &_loadedTexture.imageView);
+	}
 }
