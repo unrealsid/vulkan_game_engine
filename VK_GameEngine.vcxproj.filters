@@ -109,7 +109,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\quad.frag" />
-    <None Include="shaders\quad.vert" />
+    <None Include="shaders\quad.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\quad.vert">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

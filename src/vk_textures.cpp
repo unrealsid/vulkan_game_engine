@@ -113,9 +113,14 @@ bool vkutil::load_image_from_file(VulkanEngine& engine, const char* file, Alloca
 
 void VulkanEngine::load_images()
 {
-	if (vkutil::load_image_from_file(*this, TEXTURE_LOCATION, _loadedTexture.image))
+	std::vector<std::string> files = {"bg1.jpg", "bg2.jpg"};
+
+	for (int i = 0; i < files.size(); i++)
 	{
-		VkImageViewCreateInfo imageinfo = vkinit::imageview_create_info(VK_FORMAT_R8G8B8A8_SRGB, _loadedTexture.image._image, VK_IMAGE_ASPECT_COLOR_BIT);
-		vkCreateImageView(_device, &imageinfo, nullptr, &_loadedTexture.imageView);
+		if (vkutil::load_image_from_file(*this, (TEXTURE_LOCATION + files[i]).c_str(), _loadedTextures[i].image))
+		{
+			VkImageViewCreateInfo imageinfo = vkinit::imageview_create_info(VK_FORMAT_R8G8B8A8_SRGB, _loadedTextures[i].image._image, VK_IMAGE_ASPECT_COLOR_BIT);
+			vkCreateImageView(_device, &imageinfo, nullptr, &_loadedTextures[i].imageView);
+		}
 	}
 }

@@ -104,7 +104,7 @@ public:
 
 	UploadContext _uploadContext;
 
-	Texture _loadedTexture;
+	Texture _loadedTextures[8];
 	VkDescriptorSet textureSet{ VK_NULL_HANDLE };
 
 	void immediate_submit(std::function<void(VkCommandBuffer cmd)>&& function);

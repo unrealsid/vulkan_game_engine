@@ -2,7 +2,7 @@
 
 #define VERT_SHADER_LOCATION "C:\\Users\\Sidspacewalker\\Documents\\Visual Studio 2022\\Projects\\VK_GameEngine\\shaders\\quad.vert.spv"
 #define FRAG_SHADER_LOCATION "C:\\Users\\Sidspacewalker\\Documents\\Visual Studio 2022\\Projects\\VK_GameEngine\\shaders\\quad.frag.spv"
-#define TEXTURE_LOCATION "C:\\Users\\Sidspacewalker\\Documents\\Visual Studio 2019\\Projects\\vk-simple-game-engine\\vk-game-engine\\shaders\\texture.jpg"
+#define TEXTURE_LOCATION "C:\\Users\\Sidspacewalker\\Documents\\Visual Studio 2022\\Projects\\VK_GameEngine\\texture\\"
 #define MODEL_LOCATION "C:\\Users\\Sidspacewalker\\Documents\\Visual Studio 2022\\Projects\\VK_GameEngine\\models\\Monkey.obj"
 
 #define MAX_OBJECTS 100
