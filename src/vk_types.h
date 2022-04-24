@@ -26,3 +26,7 @@ struct Texture
 	AllocatedImage image;
 	VkImageView imageView;
 };
+
+struct ObjectPushConstants {
+	int imgID;
+};

@@ -12,6 +12,11 @@ layout(set = 0, binding = 1) uniform GlobalData
 layout( set = 2, binding = 0) uniform sampler thisSampler;
 layout( set = 2, binding = 1) uniform texture2D textures[8];
 
+layout( push_constant ) uniform perObjectBlock 
+{
+  int imgID;
+} PushConstant;
+
 //output write
 layout (location = 0) out vec4 outFragColor;
 
@@ -22,5 +27,5 @@ void main()
 	//vec3 color = texture(imgTexture, inUV).xyz + globalData.time.x;
 
 	vec3 color = vec3(1.0f);
-	outFragColor = texture(sampler2D(textures[0], thisSampler), inUV);
+	outFragColor = texture(sampler2D(textures[PushConstant.imgID], thisSampler), inUV);
 }

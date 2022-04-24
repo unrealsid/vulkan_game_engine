@@ -47,6 +47,8 @@ void VulkanEngine::init_scene()
 	quadObject.material = get_material("quad");
 	quadObject.mesh = get_mesh("quad");
 
+	quadObject.material->textureID = 1;
+
 	auto translation = glm::translate(glm::mat4{ 1.0 }, glm::vec3(0));
 	auto scale = glm::scale(glm::mat4{ 1.0 }, glm::vec3(1.1));
 
@@ -106,6 +108,12 @@ void VulkanEngine::draw_objects(VkCommandBuffer cmd, RenderObject* first, int co
 			lastMaterial = object.material;
 
 			vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, object.material->pipelineLayout, 1, 1, &_frameData.objectDescriptor, 0, nullptr);
+
+			//push texture ID
+			ObjectPushConstants constants;
+			constants.imgID = object.material->textureID;
+
+			vkCmdPushConstants(cmd, _quadPipelineLayout, VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(constants), &constants);
 		}
 
 		//only bind the mesh if it's a different one from last bind

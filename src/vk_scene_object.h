@@ -11,6 +11,8 @@ struct Material
 
 	//Push constants and descriptor sets
 	VkPipelineLayout pipelineLayout;
+
+	int textureID = -1;
 };
 
 struct RenderObject 

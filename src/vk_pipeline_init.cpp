@@ -155,6 +155,18 @@ void VulkanEngine::build_pipeline_layout()
 		pipeline_layout_info.setLayoutCount = 3;
 		pipeline_layout_info.pSetLayouts = layouts;
 
+		//setup push constants
+		VkPushConstantRange push_constant;
+		//this push constant range starts at the beginning
+		push_constant.offset = 0;
+		//this push constant range takes up the size of a ObjectPushConstants struct
+		push_constant.size = sizeof(ObjectPushConstants);
+		//this push constant range is accessible only in the Fragment shader
+		push_constant.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+
+		pipeline_layout_info.pPushConstantRanges = &push_constant;
+		pipeline_layout_info.pushConstantRangeCount = 1;
+
 		VK_CHECK(vkCreatePipelineLayout(_device, &pipeline_layout_info, nullptr, &_quadPipelineLayout));
 	}
 	else
