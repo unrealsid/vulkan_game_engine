@@ -98,7 +98,7 @@ void VulkanEngine::init_texture_descriptors()
 	layoutBindings[0] = vkinit::descriptorset_layout_binding(VK_DESCRIPTOR_TYPE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 0);
 
 	//another set, one that holds a single texture
-	layoutBindings[1] = vkinit::descriptorset_layout_binding(VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, VK_SHADER_STAGE_FRAGMENT_BIT, 1, 2);
+	layoutBindings[1] = vkinit::descriptorset_layout_binding(VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, VK_SHADER_STAGE_FRAGMENT_BIT, 1, MAX_TEXTURES);
 
 	VkDescriptorSetLayoutCreateInfo set3info = {};
 	set3info.bindingCount = 2;
@@ -126,9 +126,9 @@ void VulkanEngine::init_texture_descriptors()
 	vkAllocateDescriptorSets(_device, &allocInfo, &textureSet);
 
 	//write to the descriptor set so that it points to our texture
-	VkDescriptorImageInfo imageBufferInfos[2];
+	VkDescriptorImageInfo imageBufferInfos[MAX_TEXTURES];
 
-	for (uint32_t i = 0; i < 2; ++i)
+	for (uint32_t i = 0; i < MAX_TEXTURES; ++i)
 	{
 		imageBufferInfos[i].sampler = nullptr;
 		imageBufferInfos[i].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
@@ -142,11 +142,9 @@ void VulkanEngine::init_texture_descriptors()
 
 	texture1[0] = vkinit::write_descriptor_image(VK_DESCRIPTOR_TYPE_SAMPLER, textureSet, &sampler, 0);
 	
-	texture1[1] = vkinit::write_descriptor_image(VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, textureSet, imageBufferInfos, 1, 2);
+	texture1[1] = vkinit::write_descriptor_image(VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, textureSet, imageBufferInfos, 1, MAX_TEXTURES);
 
 	vkUpdateDescriptorSets(_device, 2, texture1, 0, nullptr);
-
-	std::cout << "Hello";
 }
 
 void VulkanEngine::init_storage_buffers()

@@ -89,6 +89,8 @@ public:
 
 	Mesh _monkeyMesh;
 
+	Mesh _spaceship;
+
 	AllocatedBuffer create_buffer(size_t allocSize, VkBufferUsageFlags usage, VmaMemoryUsage memoryUsage);
 
 	FrameData _frameData;

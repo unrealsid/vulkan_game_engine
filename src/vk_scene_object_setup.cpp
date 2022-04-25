@@ -68,13 +68,21 @@ void VulkanEngine::init_scene()
 
 	_renderables.push_back(quadObject);
 
-	RenderObject monkey;
+	//RenderObject monkey;
 
-	monkey.material = get_material("quad");
-	monkey.mesh = get_mesh("monkey");
-	monkey.transformMatrix = glm::mat4{ 1.0f };
+	//monkey.material = get_material("quad");
+	//monkey.mesh = get_mesh("monkey");
+	//monkey.transformMatrix = glm::mat4{ 1.0f };
 
-	_renderables.push_back(monkey);
+	//_renderables.push_back(monkey);
+
+	RenderObject spaceship;
+	spaceship.material = get_material("quad");
+	spaceship.mesh = get_mesh("spaceship");
+	spaceship.material->textureID = 2;
+	spaceship.transformMatrix = glm::mat4{1.0f};
+
+	_renderables.push_back(spaceship);
 }
 
 void VulkanEngine::draw_objects(VkCommandBuffer cmd, RenderObject* first, int count)
@@ -89,8 +97,26 @@ void VulkanEngine::draw_objects(VkCommandBuffer cmd, RenderObject* first, int co
 
 	for (int i = 0; i < count; i++)
 	{
+		glm::mat4 model = glm::mat4{ 1.0f };
+
 		//model rotation
-		glm::mat4 model = glm::rotate(glm::mat4{ 1.0f }, glm::radians(_frameNumber * 0.4f), glm::vec3(0, 1, 0));
+		if (i == 0)
+		{
+			//glm::mat4 rotation = glm::rotate(glm::mat4{ 1.0f }, glm::radians(_frameNumber * 0.4f), glm::vec3(0, 1, 0));
+
+			glm::mat4 translate = glm::translate(glm::mat4{ 1.0f }, glm::vec3(-2, 0, 0));
+
+			model = translate;
+		}
+		
+		if (i == 1)
+		{
+			glm::mat4 rotation = glm::rotate(glm::mat4{ 1.0f }, glm::radians(90.0f), glm::vec3(1, 0, 0));
+
+			glm::mat4 translate = glm::translate(glm::mat4{ 1.0f }, glm::vec3(2, 0, 0));
+
+			model = rotation * translate;
+		}
 
 		objectSSBO[i].modelMatrix = model;
 	}

@@ -12,7 +12,7 @@ void VulkanEngine::update_descriptors(VkCommandBuffer cmd)
 
 	//make a model view matrix for rendering the object
 	//camera view
-	glm::vec3 camPos = glm::vec3(0.0f, 0.0f, -10.0f);
+	glm::vec3 camPos = glm::vec3(0.0f, 0.0f, -5.0f);
 
 	// note that we're translating the scene in the reverse direction of where we want to move
 	glm::mat4 view = glm::translate(glm::mat4{1}, camPos);

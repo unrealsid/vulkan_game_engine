@@ -4,6 +4,8 @@
 #include <glm/glm.hpp>
 #include "vk_mesh.h"
 
+#define MAX_TEXTURES 3
+
 struct Material 
 {
 	//Stages information

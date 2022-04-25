@@ -40,11 +40,17 @@ void VulkanEngine::load_meshes()
 	//we don't care about the vertex normals
 	upload_mesh(_meshes["quad"]);
 
-	_monkeyMesh.load_from_obj(MODEL_LOCATION);
+	/*_monkeyMesh.load_from_obj(MODEL_LOCATION);
 
 	_meshes["monkey"] = _monkeyMesh;
 
-	upload_mesh(_meshes["monkey"]);
+	upload_mesh(_meshes["monkey"]);*/
+
+	_spaceship.load_from_obj(SPACESHIP_LOCATION);
+
+	_meshes["spaceship"] = _spaceship;
+
+	upload_mesh(_meshes["spaceship"]);
 }
 
 void VulkanEngine::upload_mesh(Mesh& mesh)
