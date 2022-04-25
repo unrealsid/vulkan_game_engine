@@ -1,5 +1,4 @@
 #include "vk_game_engine.h"
-#include <SDL.h>
 #include <SDL_vulkan.h>
 #include <iostream>
 #include <fstream>
@@ -199,6 +198,44 @@ void VulkanEngine::draw()
 	_frameNumber++;
 }
 
+void VulkanEngine::process_inputs(SDL_Event event)
+{
+	if (event.type == SDL_KEYDOWN)
+	{
+		if (event.key.keysym.sym == SDLK_w)
+		{
+			spaceshipMovement.z -= 0.1;
+		}
+		
+		if (event.key.keysym.sym == SDLK_a)
+		{
+			spaceshipMovement.x -= 0.1;
+		}
+		
+		if (event.key.keysym.sym == SDLK_s)
+		{
+			spaceshipMovement.z += 0.1;
+		}
+		
+		if (event.key.keysym.sym == SDLK_d)
+		{
+			spaceshipMovement.x += 0.1;
+		}
+
+		if (event.key.keysym.sym == SDLK_q)
+		{
+			spaceshipRotation.x += 10;
+		}
+
+		if (event.key.keysym.sym == SDLK_e)
+		{
+			spaceshipRotation.x -= 10;
+		}
+
+		
+	}
+}
+
 void VulkanEngine::run()
 {
 	SDL_Event e;
@@ -215,6 +252,8 @@ void VulkanEngine::run()
 			{
 				bQuit = true;
 			}
+
+			process_inputs(e);
 		}
 
 		draw();

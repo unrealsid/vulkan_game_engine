@@ -1,7 +1,7 @@
 #include <iostream>
 #include "vk_game_engine.h"
 
-int main(int argc, char* argv[])
+int wmain(int argc, char* argv[])
 {
 	VulkanEngine engine;
 

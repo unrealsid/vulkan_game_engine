@@ -50,7 +50,7 @@ void VulkanEngine::init_scene()
 	quadObject.material->textureID = 1;
 
 	auto translation = glm::translate(glm::mat4{ 1.0 }, glm::vec3(0));
-	auto scale = glm::scale(glm::mat4{ 1.0 }, glm::vec3(1.1));
+	auto scale = glm::scale(glm::mat4{ 1.0 }, glm::vec3(1.1f));
 
 	/*float aaa[16] = 
 	{
@@ -64,9 +64,9 @@ void VulkanEngine::init_scene()
 
 	memcpy(glm::value_ptr(bbb), aaa, sizeof(aaa));*/
 
-	quadObject.transformMatrix = glm::mat4{1.0f};
+	quadObject.transformMatrix = glm::mat4{ 1.0 };
 
-	_renderables.push_back(quadObject);
+	//_renderables.push_back(quadObject);
 
 	//RenderObject monkey;
 
@@ -100,23 +100,14 @@ void VulkanEngine::draw_objects(VkCommandBuffer cmd, RenderObject* first, int co
 		glm::mat4 model = glm::mat4{ 1.0f };
 
 		//model rotation
-		if (i == 0)
-		{
-			//glm::mat4 rotation = glm::rotate(glm::mat4{ 1.0f }, glm::radians(_frameNumber * 0.4f), glm::vec3(0, 1, 0));
+		glm::mat4 rotation = glm::rotate(glm::mat4{ 1.0f }, glm::radians(90.0f), glm::vec3(1, 0, 0));
+		glm::mat4 playerShipRotation = glm::rotate(glm::mat4{ 1.0f }, glm::radians(spaceshipRotation.x), glm::vec3(0, 1, 0));
 
-			glm::mat4 translate = glm::translate(glm::mat4{ 1.0f }, glm::vec3(-2, 0, 0));
+		glm::mat4 translate = glm::translate(glm::mat4{ 1.0f }, spaceshipMovement);
 
-			model = translate;
-		}
-		
-		if (i == 1)
-		{
-			glm::mat4 rotation = glm::rotate(glm::mat4{ 1.0f }, glm::radians(90.0f), glm::vec3(1, 0, 0));
+		glm::mat4 scaleSpaceship = glm::scale(glm::mat4{ 1.0 }, glm::vec3(0.3f));
 
-			glm::mat4 translate = glm::translate(glm::mat4{ 1.0f }, glm::vec3(2, 0, 0));
-
-			model = rotation * translate;
-		}
+		model = scaleSpaceship * rotation * playerShipRotation * translate;
 
 		objectSSBO[i].modelMatrix = model;
 	}

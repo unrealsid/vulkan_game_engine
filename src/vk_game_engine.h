@@ -3,6 +3,7 @@
 #include <vulkan/vulkan.h>
 #include <vector>
 #include <functional>
+#include <SDL.h>
 #include <unordered_map>
 #include "vk_mem_alloc.h"
 #include "vk_mesh.h"
@@ -44,6 +45,8 @@ public:
 
 	//draw loop
 	void draw();
+
+	void process_inputs(SDL_Event event);
 
 	//run main loop
 	void run();
@@ -91,6 +94,9 @@ public:
 
 	Mesh _spaceship;
 
+	glm::vec3 spaceshipMovement;
+	glm::vec3 spaceshipRotation;
+
 	AllocatedBuffer create_buffer(size_t allocSize, VkBufferUsageFlags usage, VmaMemoryUsage memoryUsage);
 
 	FrameData _frameData;
@@ -106,7 +112,7 @@ public:
 
 	UploadContext _uploadContext;
 
-	Texture _loadedTextures[8];
+	Texture _loadedTextures[MAX_TEXTURES];
 	VkDescriptorSet textureSet{ VK_NULL_HANDLE };
 
 	void immediate_submit(std::function<void(VkCommandBuffer cmd)>&& function);
