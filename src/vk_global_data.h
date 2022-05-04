@@ -5,6 +5,7 @@ struct GlobalData
 {
 	//Current time
 	glm::vec4 time = glm::vec4();
+	glm::vec4 textureID;
 };
 
 //Stores camera transforms

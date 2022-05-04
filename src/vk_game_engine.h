@@ -104,7 +104,9 @@ public:
 	GPUCameraData _cameraData;
 
 	VkDescriptorSetLayout _globalSetLayout;
+	VkDescriptorSetLayout _perObjectSetLayout;
 	VkDescriptorSetLayout _objectSetLayout;
+	VkDescriptorSetLayout _singleTextureSetLayout;
 
 	VkDescriptorPool _descriptorPool;
 
@@ -116,8 +118,6 @@ public:
 	VkDescriptorSet textureSet{ VK_NULL_HANDLE };
 
 	void immediate_submit(std::function<void(VkCommandBuffer cmd)>&& function);
-
-	VkDescriptorSetLayout _singleTextureSetLayout;
 
 	VkImageView _depthImageView;
 	AllocatedImage _depthImage;
@@ -169,6 +169,8 @@ private:
 
 	void init_uniform_buffer_descriptors();
 
+	void init_dynamic_descriptors();
+
 	void init_texture_descriptors();
 
 	void init_storage_buffers();
@@ -183,7 +185,7 @@ private:
 
 	void upload_mesh(Mesh& mesh);
 	
-	void update_descriptors(VkCommandBuffer cmd);
+	void update_descriptors(VkCommandBuffer cmd, std::vector<RenderObject>& objects);
 
 	void build_pipeline_layout();
 };

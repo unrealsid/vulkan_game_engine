@@ -150,9 +150,9 @@ void VulkanEngine::build_pipeline_layout()
 
 	if (_singleTextureSetLayout != nullptr)
 	{
-		VkDescriptorSetLayout layouts[] = { _globalSetLayout, _objectSetLayout, _singleTextureSetLayout };
+		VkDescriptorSetLayout layouts[] = { _globalSetLayout, _objectSetLayout, _singleTextureSetLayout, _perObjectSetLayout };
 
-		pipeline_layout_info.setLayoutCount = 3;
+		pipeline_layout_info.setLayoutCount = 4;
 		pipeline_layout_info.pSetLayouts = layouts;
 
 		//setup push constants
