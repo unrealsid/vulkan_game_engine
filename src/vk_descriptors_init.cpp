@@ -115,7 +115,7 @@ void VulkanEngine::init_dynamic_descriptors()
 	VkDescriptorBufferInfo perObjectBufferInfo;
 	perObjectBufferInfo.buffer = _frameData.perObjectFrameDataBuffer._buffer;
 	perObjectBufferInfo.offset = 0;
-	perObjectBufferInfo.range = sizeof(GlobalData);
+	perObjectBufferInfo.range = pad_uniform_buffer_size(sizeof(GlobalData));
 
 	VkWriteDescriptorSet perObjectDataWrite = vkinit::write_descriptor_buffer(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, _frameData.perObjectDescriptor, &perObjectBufferInfo, 0);
 	vkUpdateDescriptorSets(_device, 1, &perObjectDataWrite, 0, nullptr);

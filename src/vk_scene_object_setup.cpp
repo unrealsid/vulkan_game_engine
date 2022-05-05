@@ -94,6 +94,13 @@ void VulkanEngine::init_scene()
 	spaceship2.transformMatrix = glm::mat4{ 1.0f };
 
 	_renderables.push_back(spaceship2);
+	
+	RenderObject spaceship3;
+	spaceship3.material = get_material("quad");
+	spaceship3.mesh = get_mesh("spaceship");
+	spaceship3.transformMatrix = glm::mat4{ 1.0f };
+
+	_renderables.push_back(spaceship2);
 
 	//Assign the descriptor sets
 	for(auto& renderable : _renderables)
@@ -133,7 +140,7 @@ void VulkanEngine::draw_objects(VkCommandBuffer cmd, RenderObject* first, int co
 			//glm::mat4 projection = glm::ortho(-aspectRatio, aspectRatio, -1.0f, 1.0f, -1.0f, 2.0f);
 			glm::mat4 projection = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f);
 
-			projection[1][1] *= -1;
+			projection[1][1] *= 1;
 
 			_cameraData.view = view;
 			_cameraData.projection = projection;
@@ -146,13 +153,15 @@ void VulkanEngine::draw_objects(VkCommandBuffer cmd, RenderObject* first, int co
 			//Binding 0 in the dynamic buffer
 			//Fragment
 			char* fragmentData;
-			vmaMapMemory(_allocator, _frameData.perObjectFrameDataBuffer._allocation, (void**)&fragmentData);
+			vmaMapMemory(_allocator, _frameData.perObjectFrameDataBuffer._allocation, (void**) &fragmentData);
 
 			float sine = abs(sin(_frameNumber / 120.f));
 
 			GlobalData frameData;
 			frameData.time.x = sine;
-			frameData.textureID.x = i;
+			frameData.textureID = i;
+
+			fragmentData += pad_uniform_buffer_size(sizeof(GlobalData)) * i;
 
 			memcpy(fragmentData, &frameData, sizeof(GlobalData));
 
@@ -192,6 +201,11 @@ void VulkanEngine::draw_objects(VkCommandBuffer cmd, RenderObject* first, int co
 			if (i == 2)
 			{
 				translate = glm::translate(glm::mat4{ 1.0f }, glm::vec3(0, 0, 3));
+			}
+
+			if (i == 3)
+			{
+				translate = glm::translate(glm::mat4{ 1.0f }, glm::vec3(0, 0, -3));
 			}
 
 			model = scale * rotation * translate;

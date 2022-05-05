@@ -4,8 +4,8 @@
 #include <glm/glm.hpp>
 #include "vk_mesh.h"
 
-#define MAX_TEXTURES 3
-#define MAX_OBJECTS 3
+#define MAX_TEXTURES 4
+#define MAX_OBJECTS 4
 
 struct Material 
 {
