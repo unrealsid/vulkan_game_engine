@@ -46,11 +46,11 @@ void VulkanEngine::init()
 
 	load_images();
 
+	load_meshes();
+
 	init_descriptors();
 
 	init_pipelines();
-
-	load_meshes();
 
 	init_scene();
 
@@ -144,7 +144,7 @@ void VulkanEngine::draw()
 	//once we start adding rendering commands, they will go here
 	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, _quadPipeline);
 
-	update_descriptors(cmd);
+	//update_descriptors(cmd, _renderables);
 	draw_objects(cmd, _renderables.data(), _renderables.size());
 
 	//finalize the render pass
@@ -253,7 +253,7 @@ void VulkanEngine::run()
 				bQuit = true;
 			}
 
-			process_inputs(e);
+			//process_inputs(e);
 		}
 
 		draw();
@@ -284,7 +284,6 @@ void VulkanEngine::immediate_submit(std::function<void(VkCommandBuffer cmd)>&& f
 	VK_CHECK(vkEndCommandBuffer(cmd));
 
 	VkSubmitInfo submit = vkinit::submit_info(&cmd);
-
 
 	//submit command buffer to the queue and execute it.
 	// _uploadFence will now block until the graphic commands finish execution

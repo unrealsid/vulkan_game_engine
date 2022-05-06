@@ -11,6 +11,12 @@ struct FrameData
 
 	//Resources that point inside the global buffer
 	VkDescriptorSet globalDescriptor;
+	
+	//buffer that holds a single buffer to use when rendering
+	AllocatedBuffer perObjectFrameDataBuffer;
+
+	//Resources that point inside the global buffer
+	VkDescriptorSet perObjectDescriptor;
 
 	//Object buffer--> stores object data
 	AllocatedBuffer objectBuffer;
