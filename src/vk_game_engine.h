@@ -3,7 +3,7 @@
 #include <vulkan/vulkan.h>
 #include <vector>
 #include <functional>
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <unordered_map>
 #include "vk_mem_alloc.h"
 #include "vk_mesh.h"

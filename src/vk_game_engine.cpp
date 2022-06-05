@@ -1,5 +1,5 @@
 #include "vk_game_engine.h"
-#include <SDL_vulkan.h>
+#include <SDL2/SDL_vulkan.h>
 #include <iostream>
 #include <fstream>
 #include "VkBootstrap.h"
