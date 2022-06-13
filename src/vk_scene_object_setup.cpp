@@ -42,13 +42,13 @@ Mesh* VulkanEngine::get_mesh(const std::string& name)
 
 void VulkanEngine::init_scene()
 {
-	RenderObject quadObject;
+	/*RenderObject quadObject;
 
-	quadObject.material = get_material("quad");
+	quadObject.material = get_material("default");
 	quadObject.mesh = get_mesh("quad");
 
 	auto translation = glm::translate(glm::mat4{ 1.0 }, glm::vec3(0));
-	auto scale = glm::scale(glm::mat4{ 1.0 }, glm::vec3(1.1f));
+	auto scale = glm::scale(glm::mat4{ 1.0 }, glm::vec3(1.1f));*/
 
 	/*float aaa[16] = 
 	{
@@ -62,7 +62,7 @@ void VulkanEngine::init_scene()
 
 	memcpy(glm::value_ptr(bbb), aaa, sizeof(aaa));*/
 
-	quadObject.transformMatrix = glm::mat4{ 1.0 };
+	//quadObject.transformMatrix = glm::mat4{ 1.0 };
 
 	//_renderables.push_back(quadObject);
 
@@ -74,41 +74,35 @@ void VulkanEngine::init_scene()
 
 	//_renderables.push_back(monkey);
 
-	RenderObject spaceship;
-	spaceship.material = get_material("quad");
-	spaceship.mesh = get_mesh("spaceship");
-	spaceship.transformMatrix = glm::mat4{1.0f};
-
-	_renderables.push_back(spaceship);
-
-	RenderObject spaceship1;
-	spaceship1.material = get_material("quad");
-	spaceship1.mesh = get_mesh("spaceship");
-	spaceship1.transformMatrix = glm::mat4{ 1.0f };
-
-	_renderables.push_back(spaceship1);
-	
-	RenderObject spaceship2;
-	spaceship2.material = get_material("quad");
-	spaceship2.mesh = get_mesh("spaceship");
-	spaceship2.transformMatrix = glm::mat4{ 1.0f };
-
-	_renderables.push_back(spaceship2);
-	
-	RenderObject spaceship3;
-	spaceship3.material = get_material("quad");
-	spaceship3.mesh = get_mesh("spaceship");
-	spaceship3.transformMatrix = glm::mat4{ 1.0f };
-
-	_renderables.push_back(spaceship2);
-
-	//Assign the descriptor sets
+	//Assign the descriptor sets and materials
 	for(auto& renderable : _renderables)
 	{
+		for (auto& material : renderable.materials)
+		{
+			if (auto mat = get_material("mat_default"))
+			{
+				material.reset( mat);
+			}
+		}
+
 		renderable._globalDescriptorSet = _frameData.globalDescriptor;
 		renderable._textureDescriptorSet = textureSet;
 		renderable._perObjectDescriptorSet = _frameData.perObjectDescriptor;
 	}
+}
+
+bool VulkanEngine::add_to_renderables(std::string keyName, std::string modelPath)
+{
+	if (keyName.empty())
+		return false;
+
+	RenderObject ro;
+	ro.load_from_obj(modelPath.c_str());
+	_meshes.emplace(keyName, *ro.mesh);
+	_renderables.push_back(ro);
+	upload_mesh(*ro.mesh.get());
+
+	return true;
 }
 
 void VulkanEngine::draw_objects(VkCommandBuffer cmd, RenderObject* first, int count)
@@ -171,9 +165,9 @@ void VulkanEngine::draw_objects(VkCommandBuffer cmd, RenderObject* first, int co
 			auto size = pad_uniform_buffer_size(sizeof(GlobalData));
 			uint32_t uniform_offset = size * i;
 
-			vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, _quadPipelineLayout, 0, 1, &object._globalDescriptorSet /*&_frameData.globalDescriptor*/, 0, nullptr);
-			vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, _quadPipelineLayout, 2, 1, &object._textureDescriptorSet /*&textureSetr*/, 0, nullptr);
-			vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, _quadPipelineLayout, 3, 1, &object._perObjectDescriptorSet, 1, &uniform_offset);
+			vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, _defaultPipelineLayout, 0, 1, &object._globalDescriptorSet /*&_frameData.globalDescriptor*/, 0, nullptr);
+			vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, _defaultPipelineLayout, 2, 1, &object._textureDescriptorSet /*&textureSetr*/, 0, nullptr);
+			vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, _defaultPipelineLayout, 3, 1, &object._perObjectDescriptorSet, 1, &uniform_offset);
 		}
 
 		//SSBO
@@ -219,12 +213,15 @@ void VulkanEngine::draw_objects(VkCommandBuffer cmd, RenderObject* first, int co
 		{
 
 			//only bind the pipeline if it doesn't match with the already bound one
-			if (object.material != lastMaterial)
+			for (auto& mat : object.materials)
 			{
-				vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, object.material->pipeline);
-				lastMaterial = object.material;
+				if (mat.get() != lastMaterial)
+				{
+					vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, mat->pipeline);
+					lastMaterial = mat.get();
 
-				vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, object.material->pipelineLayout, 1, 1, &_frameData.objectDescriptor, 0, nullptr);
+					vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, mat->pipelineLayout, 1, 1, &_frameData.objectDescriptor, 0, nullptr);
+				}
 			}
 
 			//push texture ID
@@ -234,14 +231,15 @@ void VulkanEngine::draw_objects(VkCommandBuffer cmd, RenderObject* first, int co
 			//vkCmdPushConstants(cmd, _quadPipelineLayout, VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(constants), &constants);
 
 			//only bind the mesh if it's a different one from last bind
-			if (object.mesh != lastMesh)
+			if (object.mesh.get() != lastMesh)
 			{
 				//bind the mesh vertex buffer with offset 0
 				VkDeviceSize offset = 0;
 				vkCmdBindVertexBuffers(cmd, 0, 1, &object.mesh->_vertexBuffer._buffer, &offset);
-				lastMesh = object.mesh;
+				lastMesh = object.mesh.get();
 			}
 		}
+
 		//we can now draw
 		vkCmdDraw(cmd, object.mesh->_vertices.size(), 1, 0, i);
 	}

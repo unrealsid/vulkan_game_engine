@@ -5,5 +5,7 @@
 #define TEXTURE_LOCATION "C:\\Users\\Sidspacewalker\\Documents\\Visual Studio 2022\\Projects\\vulkan_game_engine\\texture\\"
 #define MODEL_LOCATION "C:\\Users\\Sidspacewalker\\Documents\\Visual Studio 2022\\Projects\\vulkan_game_engine\\models\\Monkey.obj"
 #define SPACESHIP_LOCATION "C:\\Users\\Sidspacewalker\\Documents\\Visual Studio 2022\\Projects\\vulkan_game_engine\\models\\ship.obj"
+#define CUBE_MULTI_MATERIAL "C:\\Users\\Sidspacewalker\\Documents\\Visual Studio 2022\\Projects\\vulkan_game_engine\\models\\cube_multi_material.obj"
+#define MAT_BASE_DIR "C:\\Users\\Sidspacewalker\\Documents\\Visual Studio 2022\\Projects\\vulkan_game_engine\\models"
 
 //C:\\Users\\siddh\\Documents\\Visual Studio 2019\\Projects\\vk-simple-game-engine\\vk-game-engine\\

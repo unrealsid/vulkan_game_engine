@@ -2,25 +2,19 @@
 
 #include <vulkan/vulkan.h>
 #include <glm/glm.hpp>
+#include <memory>
+#include <vector>
+#include <unordered_map>
 #include "vk_mesh.h"
+#include "vk_material.h"
 
-#define MAX_TEXTURES 4
-#define MAX_OBJECTS 4
-
-struct Material 
+struct RenderObject
 {
-	//Stages information
-	VkPipeline pipeline;
+	RenderObject();
 
-	//Push constants and descriptor sets
-	VkPipelineLayout pipelineLayout;
-};
+	std::shared_ptr<Mesh> mesh;
 
-struct RenderObject 
-{
-	Mesh* mesh;
-
-	Material* material;
+	std::vector<std::shared_ptr<Material>> materials;
 
 	glm::mat4 transformMatrix;
 
@@ -32,4 +26,6 @@ struct RenderObject
 
 	//per object data
 	VkDescriptorSet _perObjectDescriptorSet;
+
+	bool load_from_obj(const char* filename);
 };

@@ -9,7 +9,8 @@
 #include "vk_mesh.h"
 #include "vk_frame_data.h"
 #include "vk_global_data.h"
-#include "vk_scene_object.h"
+#include "vk_material.h"
+#include "vk_render_object.h"
 #include "vk_types.h"
 
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE 1
@@ -85,14 +86,16 @@ public:
 	VmaAllocator _allocator;
 
 	//Inputs for this object
-	VkPipelineLayout _quadPipelineLayout;
-	VkPipeline _quadPipeline;
+	VkPipelineLayout _defaultPipelineLayout;
+	VkPipeline _defaultPipeline;
 
 	Mesh _quadMesh;
 
 	Mesh _monkeyMesh;
 
 	Mesh _spaceship;
+
+	Mesh _cubeMultiMat;
 
 	glm::vec3 spaceshipMovement;
 	glm::vec3 spaceshipRotation;
@@ -184,6 +187,8 @@ private:
 	void load_images();
 
 	void upload_mesh(Mesh& mesh);
+
+	bool add_to_renderables(std::string keyName, std::string modelPath);
 	
 	void update_descriptors(VkCommandBuffer cmd, std::vector<RenderObject>& objects);
 

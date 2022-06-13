@@ -46,11 +46,11 @@ void VulkanEngine::init()
 
 	load_images();
 
-	load_meshes();
-
 	init_descriptors();
 
 	init_pipelines();
+
+	load_meshes();
 
 	init_scene();
 
@@ -142,7 +142,7 @@ void VulkanEngine::draw()
 	vkCmdBeginRenderPass(cmd, &rpInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 	//once we start adding rendering commands, they will go here
-	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, _quadPipeline);
+	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, _defaultPipeline);
 
 	//update_descriptors(cmd, _renderables);
 	draw_objects(cmd, _renderables.data(), _renderables.size());

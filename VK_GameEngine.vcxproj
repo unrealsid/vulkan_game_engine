@@ -31,6 +31,7 @@
     <ClCompile Include="src\vk_mesh_init.cpp" />
     <ClCompile Include="src\vk_pipeline_builder.cpp" />
     <ClCompile Include="src\vk_pipeline_init.cpp" />
+    <ClCompile Include="src\vk_render_object.cpp" />
     <ClCompile Include="src\vk_scene_object_setup.cpp" />
     <ClCompile Include="src\vk_textures.cpp" />
     <ClCompile Include="src\vk_types.cpp" />
@@ -47,7 +48,8 @@
     <ClInclude Include="src\vk_mem_alloc.h" />
     <ClInclude Include="src\vk_mesh.h" />
     <ClInclude Include="src\vk_pipeline_builder.h" />
-    <ClInclude Include="src\vk_scene_object.h" />
+    <ClInclude Include="src\vk_material.h" />
+    <ClInclude Include="src\vk_render_object.h" />
     <ClInclude Include="src\vk_shader_config.h" />
     <ClInclude Include="src\vk_textures.h" />
     <ClInclude Include="src\vk_types.h" />

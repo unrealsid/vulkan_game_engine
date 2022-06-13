@@ -132,14 +132,14 @@ void VulkanEngine::init_pipelines()
 	pipelineBuilder._colorBlendAttachment = vkinit::color_blend_attachment_state();
 
 	//use the triangle layout we created
-	pipelineBuilder._pipelineLayout = _quadPipelineLayout;
+	pipelineBuilder._pipelineLayout = _defaultPipelineLayout;
 
 	//default depthtesting
 	pipelineBuilder._depthStencil = vkinit::depth_stencil_create_info(true, true, VK_COMPARE_OP_LESS_OR_EQUAL);
 
 	//finally build the pipeline
-	_quadPipeline = pipelineBuilder.build_pipeline(_device, _renderPass);
-	create_material(_quadPipeline, _quadPipelineLayout, "quad");
+	_defaultPipeline = pipelineBuilder.build_pipeline(_device, _renderPass);
+	create_material(_defaultPipeline, _defaultPipelineLayout, "mat_default");
 };
 
 void VulkanEngine::build_pipeline_layout()
@@ -167,7 +167,7 @@ void VulkanEngine::build_pipeline_layout()
 		pipeline_layout_info.pPushConstantRanges = &push_constant;
 		pipeline_layout_info.pushConstantRangeCount = 1;
 
-		VK_CHECK(vkCreatePipelineLayout(_device, &pipeline_layout_info, nullptr, &_quadPipelineLayout));
+		VK_CHECK(vkCreatePipelineLayout(_device, &pipeline_layout_info, nullptr, &_defaultPipelineLayout));
 	}
 	else
 	{
@@ -176,7 +176,7 @@ void VulkanEngine::build_pipeline_layout()
 		pipeline_layout_info.setLayoutCount = 2;
 		pipeline_layout_info.pSetLayouts = layouts;
 
-		VK_CHECK(vkCreatePipelineLayout(_device, &pipeline_layout_info, nullptr, &_quadPipelineLayout));
+		VK_CHECK(vkCreatePipelineLayout(_device, &pipeline_layout_info, nullptr, &_defaultPipelineLayout));
 	}
 	
 }

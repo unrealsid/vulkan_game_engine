@@ -36,21 +36,11 @@ void VulkanEngine::load_meshes()
 	_quadMesh._vertices[5].uv = {1.0f, 0.0f};
 
 	_meshes["quad"] = _quadMesh;
-
-	//we don't care about the vertex normals
 	upload_mesh(_meshes["quad"]);
 
-	/*_monkeyMesh.load_from_obj(MODEL_LOCATION);
+	add_to_renderables("spaceship", SPACESHIP_LOCATION);
 
-	_meshes["monkey"] = _monkeyMesh;
-
-	upload_mesh(_meshes["monkey"]);*/
-
-	_spaceship.load_from_obj(SPACESHIP_LOCATION);
-
-	_meshes["spaceship"] = _spaceship;
-
-	upload_mesh(_meshes["spaceship"]);
+	add_to_renderables("cube_multi_mat", CUBE_MULTI_MATERIAL);
 }
 
 void VulkanEngine::upload_mesh(Mesh& mesh)

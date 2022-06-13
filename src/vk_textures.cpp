@@ -113,7 +113,14 @@ bool vkutil::load_image_from_file(VulkanEngine& engine, const char* file, Alloca
 
 void VulkanEngine::load_images()
 {
-	std::vector<std::string> files = {"bg1.jpg", "bg2.jpg", "cartoonship_blue.png", "Nyan_cat_250px_frame.png"};
+	std::vector<std::string> files = { "bg1.jpg", 
+									   "bg2.jpg", 
+									   "cartoonship_blue.png", 
+									   "Nyan_cat_250px_frame.png", 
+									   "Bee animation 1.png", 
+									   "Bee animation 2.png", 
+									   "Bee animation 3.png",
+									   "Bee animation 4.png", };
 
 	for (int i = 0; i < files.size(); i++)
 	{
