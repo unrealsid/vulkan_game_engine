@@ -54,9 +54,9 @@ bool VulkanEngine::load_shader_module(const char* filePath, VkShaderModule* outS
 	return true;
 }
 
-void VulkanEngine::create_shader_modules(VkShaderModule& outVertexShaderModule, VkShaderModule& outFragmentShaderModule)
+void VulkanEngine::create_shader_modules(std::string vertextShaderPath, std::string fragmentShaderPath, VkShaderModule& outVertexShaderModule, VkShaderModule& outFragmentShaderModule)
 {
-	if (!load_shader_module(FRAG_SHADER_LOCATION, &outFragmentShaderModule))
+	if (!load_shader_module(fragmentShaderPath.c_str(), &outFragmentShaderModule))
 	{
 		std::cout << "Error when building the quads fragment shader module" << std::endl;
 	}
@@ -65,7 +65,7 @@ void VulkanEngine::create_shader_modules(VkShaderModule& outVertexShaderModule, 
 		std::cout << "Quad fragment shader successfully loaded" << std::endl;
 	}
 
-	if (!load_shader_module(VERT_SHADER_LOCATION, &outVertexShaderModule))
+	if (!load_shader_module(vertextShaderPath.c_str(), &outVertexShaderModule))
 	{
 		std::cout << "Error when building the quad vertex shader module" << std::endl;
 
@@ -82,7 +82,7 @@ void VulkanEngine::init_pipelines()
 
 	VkShaderModule quadVertexShader;
 
-	create_shader_modules(quadVertexShader, quadFragShader);
+	create_shader_modules(VERT_SHADER_LOCATION, FRAG_SHADER_LOCATION, quadVertexShader, quadFragShader);
 
 	build_pipeline_layout();
 	
@@ -95,7 +95,7 @@ void VulkanEngine::init_pipelines()
 
 	pipelineBuilder._shaderStages.push_back(vkinit::pipeline_shader_stage_create_info(VK_SHADER_STAGE_FRAGMENT_BIT, quadFragShader));
 
-	//vertex input controls how to read vertices from vertex buffers. We aren't using it yet
+	//vertex input controls how to read vertices from vertex buffers
 	pipelineBuilder._vertexInputInfo = vkinit::vertex_input_state_create_info();
 
 	VertexInputDescription vertexDescription = Vertex::get_vertex_description();
@@ -140,6 +140,24 @@ void VulkanEngine::init_pipelines()
 	//finally build the pipeline
 	_defaultPipeline = pipelineBuilder.build_pipeline(_device, _renderPass);
 	create_material(_defaultPipeline, _defaultPipelineLayout, "mat_default");
+
+	//Load offscreen shaders
+	create_shader_modules(OFFSCREEN_VERT_SHADER_LOCATION, OFFSCREEN_FRAG_SHADER_LOCATION, quadVertexShader, quadFragShader);
+
+	pipelineBuilder._vertexInputInfo.pVertexAttributeDescriptions = nullptr;
+	pipelineBuilder._vertexInputInfo.vertexAttributeDescriptionCount = 0;
+
+	pipelineBuilder._vertexInputInfo.pVertexBindingDescriptions = nullptr;
+	pipelineBuilder._vertexInputInfo.vertexBindingDescriptionCount = 0;
+
+	//build the mesh pipeline
+	pipelineBuilder._shaderStages.clear();
+	pipelineBuilder._shaderStages.push_back(vkinit::pipeline_shader_stage_create_info(VK_SHADER_STAGE_VERTEX_BIT, quadVertexShader));
+
+	pipelineBuilder._shaderStages.push_back(vkinit::pipeline_shader_stage_create_info(VK_SHADER_STAGE_FRAGMENT_BIT, quadFragShader));
+
+	//init offscreen pipeline
+	init_offscreen_pipeline(pipelineBuilder);
 };
 
 void VulkanEngine::build_pipeline_layout()

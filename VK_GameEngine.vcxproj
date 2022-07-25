@@ -24,11 +24,13 @@
     <ClCompile Include="src\vk_buffer_init.cpp" />
     <ClCompile Include="src\vk_descriptors_init.cpp" />
     <ClCompile Include="src\vk_descriptor_write.cpp" />
+    <ClCompile Include="src\vk_draw_init_offscreen.cpp" />
     <ClCompile Include="src\vk_draw_init.cpp" />
     <ClCompile Include="src\vk_game_engine.cpp" />
     <ClCompile Include="src\vk_initializers.cpp" />
     <ClCompile Include="src\vk_mesh.cpp" />
     <ClCompile Include="src\vk_mesh_init.cpp" />
+    <ClCompile Include="src\vk_offscreen_pipeline_init.cpp" />
     <ClCompile Include="src\vk_pipeline_builder.cpp" />
     <ClCompile Include="src\vk_pipeline_init.cpp" />
     <ClCompile Include="src\vk_render_object.cpp" />
@@ -41,6 +43,7 @@
     <ClInclude Include="src\tiny_obj_loader.h" />
     <ClInclude Include="src\VkBootstrap.h" />
     <ClInclude Include="src\VkBootstrapDispatch.h" />
+    <ClInclude Include="src\vk_draw_init_offscreen.h" />
     <ClInclude Include="src\vk_frame_data.h" />
     <ClInclude Include="src\vk_game_engine.h" />
     <ClInclude Include="src\vk_global_data.h" />
@@ -163,6 +166,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>vulkan-1.lib;SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\VulkanSDK\1.3.211.0\Lib;C:\VulkanSDK\1.3.211.0\Third-Party\Bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

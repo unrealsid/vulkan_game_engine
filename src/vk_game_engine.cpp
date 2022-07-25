@@ -42,6 +42,8 @@ void VulkanEngine::init()
 
 	init_framebuffers();
 
+	init_offscreen_render_texture();
+
 	init_sync_structures();
 
 	load_images();
@@ -101,56 +103,92 @@ void VulkanEngine::draw()
 	//naming it cmd for shorter writing
 	VkCommandBuffer cmd = _mainCommandBuffer;
 
-	//begin the command buffer recording. We will use this command buffer exactly once, so we want to let Vulkan know that
-	VkCommandBufferBeginInfo cmdBeginInfo = {};
-	cmdBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-	cmdBeginInfo.pNext = nullptr;
+	{
+		/*
+			First render pass: Offscreen rendering
+		*/
+		
+		VkClearValue clearValues[2];
+		clearValues[0].color = { { 0.1f, 0.5f, 0.2f, 1.0f } };
+		clearValues[1].depthStencil = { 1.0f, 0 };
 
-	cmdBeginInfo.pInheritanceInfo = nullptr;
-	cmdBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+		//begin the command buffer recording. We will use this command buffer exactly once, so we want to let Vulkan know that
+		VkCommandBufferBeginInfo cmdBeginInfo = {};
+		cmdBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+		cmdBeginInfo.pNext = nullptr;
 
-	VK_CHECK(vkBeginCommandBuffer(cmd, &cmdBeginInfo));
+		cmdBeginInfo.pInheritanceInfo = nullptr;
+		cmdBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
-	//make a clear-color from frame number. This will flash with a 120*pi frame period.
-	VkClearValue clearValue;
-	float flash = abs(sin(_frameNumber / 120.f));
-	clearValue.color = { { 0.0f, 0.0f, 0.0f, 1.0f } };
+		VK_CHECK(vkBeginCommandBuffer(cmd, &cmdBeginInfo));
 
-	//clear depth at 1
-	VkClearValue depthClear;
-	depthClear.depthStencil.depth = 1.f;
+		VkRenderPassBeginInfo renderPassBeginInfo = {};
+		renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+		renderPassBeginInfo.pNext = nullptr;
+		renderPassBeginInfo.renderPass = offscreenPass.renderPass;
+		renderPassBeginInfo.framebuffer = offscreenPass.framebuffer;
+		renderPassBeginInfo.renderArea.extent.width = offscreenPass.width;
+		renderPassBeginInfo.renderArea.extent.height = offscreenPass.height;
+		renderPassBeginInfo.clearValueCount = 2;
+		renderPassBeginInfo.pClearValues = clearValues;
 
-	//start the main renderpass.
-	//We will use the clear color from above, and the framebuffer of the index the swapchain gave us
-	VkRenderPassBeginInfo rpInfo = {};
-	rpInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-	rpInfo.pNext = nullptr;
+		vkCmdBeginRenderPass(cmd, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-	rpInfo.renderPass = _renderPass;
-	rpInfo.renderArea.offset.x = 0;
-	rpInfo.renderArea.offset.y = 0;
-	rpInfo.renderArea.extent = _windowExtent;
-	rpInfo.framebuffer = _framebuffers[swapchainImageIndex];
+		VkDeviceSize offsets[1] = { 0 };
 
-	//connect clear values
-	rpInfo.clearValueCount = 2;
+		vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, _offscreenPipeline);
 
-	VkClearValue clearValues[] = { clearValue, depthClear };
+		vkCmdDraw(cmd, 3, 1, 0, 0);
 
-	rpInfo.pClearValues = &clearValues[0];
+		vkCmdEndRenderPass(cmd);
 
-	vkCmdBeginRenderPass(cmd, &rpInfo, VK_SUBPASS_CONTENTS_INLINE);
+	}
 
-	//once we start adding rendering commands, they will go here
-	vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, _defaultPipeline);
+	/*
+		Main pass rendering
+	*/
+	{
+		//make a clear-color from frame number. This will flash with a 120*pi frame period.
+		VkClearValue clearValue;
+		float flash = abs(sin(_frameNumber / 120.f));
+		clearValue.color = { { 0.0f, 0.0f, 0.0f, 1.0f } };
 
-	//update_descriptors(cmd, _renderables);
-	draw_objects(cmd, _renderables.data(), _renderables.size());
+		//clear depth at 1
+		VkClearValue depthClear;
+		depthClear.depthStencil.depth = 1.f;
 
-	//finalize the render pass
-	vkCmdEndRenderPass(cmd);
-	//finalize the command buffer (we can no longer add commands, but it can now be executed)
-	VK_CHECK(vkEndCommandBuffer(cmd));
+		//start the main renderpass.
+		//We will use the clear color from above, and the framebuffer of the index the swapchain gave us
+		VkRenderPassBeginInfo rpInfo = {};
+		rpInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+		rpInfo.pNext = nullptr;
+
+		rpInfo.renderPass = _renderPass;
+		rpInfo.renderArea.offset.x = 0;
+		rpInfo.renderArea.offset.y = 0;
+		rpInfo.renderArea.extent = _windowExtent;
+		rpInfo.framebuffer = _framebuffers[swapchainImageIndex];
+
+		//connect clear values
+		rpInfo.clearValueCount = 2;
+
+		VkClearValue clearValues[] = { clearValue, depthClear };
+
+		rpInfo.pClearValues = &clearValues[0];
+
+		vkCmdBeginRenderPass(cmd, &rpInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+		//once we start adding rendering commands, they will go here
+		vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, _defaultPipeline);
+
+		//update_descriptors(cmd, _renderables);
+		draw_objects(cmd, _renderables.data(), _renderables.size());
+
+		//finalize the render pass
+		vkCmdEndRenderPass(cmd);
+		//finalize the command buffer (we can no longer add commands, but it can now be executed)
+		VK_CHECK(vkEndCommandBuffer(cmd));
+	}
 
 	//prepare the submission to the queue.
 	//we want to wait on the _presentSemaphore, as that semaphore is signaled when the swapchain is ready

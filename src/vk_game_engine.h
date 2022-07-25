@@ -12,6 +12,8 @@
 #include "vk_material.h"
 #include "vk_render_object.h"
 #include "vk_types.h"
+#include "vk_pipeline_builder.h"
+#include "vk_draw_init_offscreen.h"
 
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE 1
 
@@ -58,7 +60,7 @@ public:
 	VkDevice _device;
 	VkSurfaceKHR _surface;
 
-	VkSwapchainKHR _swapchain; // from other articles
+	VkSwapchainKHR _swapchain;
 
 	// image format expected by the windowing system
 	VkFormat _swapchainImageFormat;
@@ -89,13 +91,9 @@ public:
 	VkPipelineLayout _defaultPipelineLayout;
 	VkPipeline _defaultPipeline;
 
+	VkPipeline _offscreenPipeline;
+
 	Mesh _quadMesh;
-
-	Mesh _monkeyMesh;
-
-	Mesh _spaceship;
-
-	Mesh _cubeMultiMat;
 
 	glm::vec3 spaceshipMovement;
 	glm::vec3 spaceshipRotation;
@@ -128,6 +126,9 @@ public:
 	//the format for the depth image
 	VkFormat _depthFormat;
 
+	VkImageView _offscreenImageView;
+	AllocatedImage _offscreenImage;
+
 	std::vector<RenderObject> _renderables;
 
 	std::unordered_map<std::string, Material> _materials;
@@ -158,11 +159,15 @@ private:
 
 	void init_pipelines();
 
+	void init_offscreen_pipeline(PipelineBuilder pipelineBuilder);
+
 	bool load_shader_module(const char* filePath, VkShaderModule* outShaderModule);
 
-	void create_shader_modules(VkShaderModule& outVertexShaderModule, VkShaderModule& outFragmentShaderModule);
+	void create_shader_modules(std::string vertextShaderPath, std::string fragmentShaderPath, VkShaderModule& outVertexShaderModule, VkShaderModule& outFragmentShaderModule);
 
 	void init_default_renderpass();
+
+	void init_offscreen_render_texture();
 
 	void init_framebuffers();
 
